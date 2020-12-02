@@ -25,7 +25,7 @@ public final class InputReader {
                 .build();
         final HttpRequest request = HttpRequest.newBuilder(
                 URI.create(String.format("https://adventofcode.com/2020/day/%d/input", day)))
-                .header("Cookie", "session=***REMOVED***")
+                .header("Cookie", "session=")
                 .build();
 
         final HttpResponse<String> data = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
