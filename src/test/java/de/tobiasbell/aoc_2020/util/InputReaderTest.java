@@ -1,4 +1,4 @@
-package de.tobiasbell.aoc_2020.day1.util;
+package de.tobiasbell.aoc_2020.util;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

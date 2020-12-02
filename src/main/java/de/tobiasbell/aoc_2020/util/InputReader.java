@@ -1,4 +1,4 @@
-package de.tobiasbell.aoc_2020.day1.util;
+package de.tobiasbell.aoc_2020.util;
 
 import java.io.IOException;
 import java.io.InputStream;

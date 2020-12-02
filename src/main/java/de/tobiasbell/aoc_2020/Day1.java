@@ -1,4 +1,4 @@
-package de.tobiasbell.aoc_2020.day1;
+package de.tobiasbell.aoc_2020;
 
 import java.util.Arrays;
 import java.util.List;

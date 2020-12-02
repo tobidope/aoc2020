@@ -1,6 +1,6 @@
-package de.tobiasbell.aoc_2020.day1;
+package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.day1.util.InputReader;
+import de.tobiasbell.aoc_2020.util.InputReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
