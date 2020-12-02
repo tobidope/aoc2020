@@ -1,6 +1,6 @@
 package de.tobiasbell.aoc_2020.day1;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.day1.util.InputReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class Day1Test {
 
     @Test
-    void pairFinder() throws IOException {
+    void pairFinder() {
         var test = """
                 1721
                 979
