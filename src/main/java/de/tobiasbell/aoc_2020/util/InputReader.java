@@ -9,9 +9,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class InputReader {
 
@@ -40,9 +38,7 @@ public final class InputReader {
         }
     }
 
-    public static <T> List<T> readLines(final int day, Function<String, T> converter) throws IOException {
-        return Arrays.stream(getInput(day).split("\\R"))
-                .map(converter)
-                .collect(Collectors.toList());
+    public static Stream<String> lines(final String input) {
+        return Arrays.stream(input.split("\\R"));
     }
 }

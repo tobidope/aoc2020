@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +21,7 @@ class Day1Test {
                 675
                 1456
                 """;
-        final List<Long> numbers = Stream.of(test.split("\\R"))
+        final List<Long> numbers = InputReader.lines(test)
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
         assertThat(Day1.pairFinder(numbers)).containsExactlyInAnyOrder(1721, 299);

@@ -1,21 +1,22 @@
 package de.tobiasbell.aoc_2020;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static de.tobiasbell.aoc_2020.util.InputReader.lines;
+
 public class Day2 {
     public static boolean isValid(PasswordLine p) {
         final long count = p.line().chars()
-                .filter(c -> c == p.c())
+                .filter(c -> c == p.character())
                 .count();
         return count >= p.min() && count <= p.max();
     }
 
     public static boolean isTobboganValid(PasswordLine p) {
-        boolean firstMatch = p.line().charAt(p.min() - 1) == p.c();
-        boolean secondMatch = p.line().charAt(p.max() - 1) == p.c();
+        boolean firstMatch = p.line().charAt(p.min() - 1) == p.character();
+        boolean secondMatch = p.line().charAt(p.max() - 1) == p.character();
         return (firstMatch || secondMatch) && !(firstMatch && secondMatch);
     }
 
@@ -26,7 +27,7 @@ public class Day2 {
     }
 
     private static Stream<PasswordLine> readPasswordLines(String input) {
-        return Arrays.stream(input.split("\\R"))
+        return lines(input)
                 .map(PasswordLine::of);
     }
 
@@ -36,7 +37,7 @@ public class Day2 {
                 .count();
     }
 
-    public static record PasswordLine(int min, int max, char c, String line) {
+    public static record PasswordLine(int min, int max, char character, String line) {
         private static final Pattern LINE = Pattern.compile("^(\\d+)-(\\d+) ([a-z]): ([a-z]+)$");
 
         public static PasswordLine of(String line) {
