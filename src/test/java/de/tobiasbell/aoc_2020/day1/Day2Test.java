@@ -15,6 +15,6 @@ class Day2Test {
 
     @Test
     void solve2() throws IOException {
-        assertThat(Day2.solve2(InputReader.getInput(2))).isEqualTo(0);
+        assertThat(Day2.solve2(InputReader.getInput(2))).isEqualTo(593L);
     }
 }
