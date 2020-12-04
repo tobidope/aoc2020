@@ -9,9 +9,12 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public final class InputReader {
+
+    public static Pattern EMPTY_LINE_RE = Pattern.compile("^\\s*$", Pattern.MULTILINE);
 
     private InputReader() {
     }
@@ -40,5 +43,9 @@ public final class InputReader {
 
     public static Stream<String> lines(final String input) {
         return Arrays.stream(input.split("\\R"));
+    }
+
+    public static Stream<String> splitByEmptyLines(final String input) {
+        return Arrays.stream(EMPTY_LINE_RE.split(input));
     }
 }
