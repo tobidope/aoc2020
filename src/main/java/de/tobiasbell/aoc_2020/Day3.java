@@ -37,7 +37,7 @@ public class Day3 {
     }
 
     public static record TreeMap(List<String> map) {
-        public static char TREE = '#';
+        public static final char TREE = '#';
 
         public boolean hasTree(int x, int y) {
             return map.get(x).charAt(y % columns()) == TREE;

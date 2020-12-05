@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public final class InputReader {
 
-    public static Pattern EMPTY_LINE_RE = Pattern.compile("^\\s*$", Pattern.MULTILINE);
+    public static final Pattern EMPTY_LINE_RE = Pattern.compile("^\\s*$", Pattern.MULTILINE);
 
     private InputReader() {
     }
