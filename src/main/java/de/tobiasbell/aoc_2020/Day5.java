@@ -3,8 +3,8 @@ package de.tobiasbell.aoc_2020;
 import de.tobiasbell.aoc_2020.util.InputReader;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class Day5 {
 
@@ -20,18 +20,20 @@ public class Day5 {
     }
 
     public static long findMissingSeatId(final String input) {
-        final List<Long> seatIds = InputReader.lines(input)
+        final List<Long> sortedSeatIds = InputReader.lines(input)
                 .map(Day5::computeSeatId)
                 .sorted()
                 .collect(Collectors.toList());
-        for (int i = 0; i < seatIds.size() - 1; i++) {
-            final Long seatA = seatIds.get(i);
-            final Long seatB = seatIds.get(i + 1);
-            if (seatB == seatA + 2) {
-                return seatA + 1;
-            }
-        }
-        throw new NoSuchElementException();
+        final long minSeatId = sortedSeatIds.get(0);
+        final long maxSeatId = sortedSeatIds.get(sortedSeatIds.size() - 1);
+        // The difference of the sum of all numbers between minSeatId and maxSeatId
+        // and the sum of all sortedSeatIds is the missing seatId
+        return LongStream
+                .rangeClosed(minSeatId, maxSeatId)
+                .sum()
+                - sortedSeatIds.stream()
+                .mapToLong(i -> i)
+                .sum();
     }
 
     public static long computeSeatId(final String input) {
