@@ -7,17 +7,14 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Day4 {
+
+    public static final Pattern ENTRY_RE = Pattern.compile("(\\w+):(\\S+)");
+
     public static Map<PassportEntry, String> readPassport(final String entry) {
         Map<PassportEntry, String> passport = new EnumMap<>(PassportEntry.class);
-        final String entries = Arrays.stream(PassportEntry.values())
-                .map(PassportEntry::name)
-                .map(String::toLowerCase)
-                .collect(Collectors.joining("|"));
-        final Pattern p = Pattern.compile("(" + entries + ")" + ":(\\S+)", Pattern.MULTILINE);
-        final Matcher matcher = p.matcher(entry);
+        final Matcher matcher = ENTRY_RE.matcher(entry);
         while (matcher.find()) {
             final PassportEntry passportEntry = PassportEntry.of(matcher.group(1));
             passport.put(passportEntry, matcher.group(2));
@@ -28,8 +25,8 @@ public class Day4 {
 
     public static boolean hasEnoughEntries(Map<PassportEntry, String> map) {
         return map.keySet().stream()
-                .filter(p -> p.isMandatory())
-                .count() == PassportEntry.MANDATORY_ENTRIY_COUNT;
+                .filter(PassportEntry::isMandatory)
+                .count() == PassportEntry.MANDATORY_ENTRY_COUNT;
     }
 
     public static boolean hasValidValues(Map<PassportEntry, String> map) {
@@ -118,7 +115,8 @@ public class Day4 {
             }
         };
 
-        public static long MANDATORY_ENTRIY_COUNT = Arrays.stream(PassportEntry.values()).filter(PassportEntry::isMandatory).count();
+        public static final long MANDATORY_ENTRY_COUNT =
+                Arrays.stream(PassportEntry.values()).filter(PassportEntry::isMandatory).count();
         private final boolean mandatory;
 
         PassportEntry(boolean mandatory) {
