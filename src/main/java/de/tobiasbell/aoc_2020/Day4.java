@@ -5,22 +5,23 @@ import de.tobiasbell.aoc_2020.util.InputReader;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.stream.Collectors.toMap;
 
 public class Day4 {
 
     public static final Pattern ENTRY_RE = Pattern.compile("(\\w+):(\\S+)");
 
     public static Map<PassportEntry, String> readPassport(final String entry) {
-        Map<PassportEntry, String> passport = new EnumMap<>(PassportEntry.class);
-        final Matcher matcher = ENTRY_RE.matcher(entry);
-        while (matcher.find()) {
-            final PassportEntry passportEntry = PassportEntry.of(matcher.group(1));
-            passport.put(passportEntry, matcher.group(2));
-        }
-
-        return passport;
+        return ENTRY_RE.matcher(entry).results()
+                .collect(toMap(
+                        match -> PassportEntry.of(match.group(1)),
+                        match -> match.group(2),
+                        (s, s2) -> {
+                            throw new IllegalArgumentException("Duplicate entries not allowed");
+                        },
+                        () -> new EnumMap<>(PassportEntry.class)));
     }
 
     public static boolean hasEnoughEntries(Map<PassportEntry, String> map) {
@@ -52,24 +53,21 @@ public class Day4 {
     public enum PassportEntry {
         BYR {
             @Override
-            public boolean validate(String input) {
-                final int birthYear = Integer.parseInt(input);
-                return birthYear >= 1920 && birthYear <= 2002;
+            public boolean validate(String birthYear) {
+                return PassportEntry.isInRange(birthYear, 1920, 2002);
 
             }
         },
         IYR {
             @Override
-            public boolean validate(String input) {
-                final int issueYear = Integer.parseInt(input);
-                return issueYear >= 2010 && issueYear <= 2020;
+            public boolean validate(String issueYear) {
+                return PassportEntry.isInRange(issueYear, 2010, 2020);
             }
         },
         EYR {
             @Override
-            public boolean validate(String input) {
-                final int expirationYear = Integer.parseInt(input);
-                return expirationYear >= 2020 && expirationYear <= 2030;
+            public boolean validate(String expirationYear) {
+                return PassportEntry.isInRange(expirationYear, 2020, 2030);
             }
         },
         HGT {
@@ -78,11 +76,11 @@ public class Day4 {
                 if (input.length() < 4) {
                     return false;
                 }
-                final int height = Integer.parseInt(input.substring(0, input.length() - 2));
+                final String height = input.substring(0, input.length() - 2);
                 final String measure = input.substring(input.length() - 2);
                 return switch (measure) {
-                    case "cm" -> height >= 150 && height <= 193;
-                    case "in" -> height >= 59 && height <= 76;
+                    case "cm" -> PassportEntry.isInRange(height, 150, 193);
+                    case "in" -> PassportEntry.isInRange(height, 59, 76);
                     default -> throw new IllegalStateException("Unexpected value: " + measure);
                 };
             }
@@ -131,13 +129,18 @@ public class Day4 {
             return Arrays.stream(PassportEntry.values())
                     .filter(p -> p.name().equalsIgnoreCase(entry))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Unknown entry: " + entry));
+                    .orElseThrow();
+        }
+
+        private static boolean isInRange(final String digits, int min, int max) {
+            final int i = Integer.parseInt(digits);
+            return i >= min && i <= max;
         }
 
         public boolean isMandatory() {
             return mandatory;
         }
 
-        public abstract boolean validate(String input);
+        public abstract boolean validate(final String input);
     }
 }

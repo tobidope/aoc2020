@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class Day5 {
+    private Day5() {
+    }
 
     public static long solve1(final String input) {
         return InputReader.lines(input)

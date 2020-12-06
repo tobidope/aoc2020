@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import static de.tobiasbell.aoc_2020.util.InputReader.lines;
 
 public class Day1 {
-
     public static final int EXPECTED = 2020;
+
+    private Day1() {
+    }
 
     public static long[] pairFinder(List<Long> numbers) {
         for (var i : numbers) {

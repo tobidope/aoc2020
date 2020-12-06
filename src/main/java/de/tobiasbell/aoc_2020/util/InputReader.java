@@ -30,7 +30,6 @@ public final class InputReader {
                 .build();
 
         final HttpResponse<String> data = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-        System.out.println(data.body());
         return data.body();
     }
 
