@@ -27,14 +27,14 @@ public class Day6 {
     }
 
     public static long everyoneAnsweredYes(final String answers) {
-        LOG.info("Answers: {}", answers);
+        LOG.debug("Answers: {}", answers);
         final Map<Integer, Long> groupByChar = answers.trim().chars()
                 .boxed()
                 .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
-        LOG.info("groupByChar: {}", groupByChar);
+        LOG.debug("groupByChar: {}", groupByChar);
         final Long personCount = groupByChar.getOrDefault((int) '\n', 0L) + 1;
-        LOG.info("Persons: {}", personCount);
-        LOG.info("==========");
+        LOG.debug("Persons: {}", personCount);
+        LOG.debug("==========");
         return groupByChar.values().stream()
                 .filter(answerCount -> answerCount.equals(personCount))
                 .count();
