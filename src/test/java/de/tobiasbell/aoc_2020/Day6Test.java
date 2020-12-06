@@ -27,29 +27,29 @@ class Day6Test {
         var answers = """
                 abc
                 """;
-        assertThat(Day6.everoneAnsweredYes(answers)).isEqualTo(3);
+        assertThat(Day6.everyoneAnsweredYes(answers)).isEqualTo(3);
         answers = """
                 a
                 b
                 c
                 """;
-        assertThat(Day6.everoneAnsweredYes(answers)).isEqualTo(0);
+        assertThat(Day6.everyoneAnsweredYes(answers)).isEqualTo(0);
         answers = """
                 a
                 a
                 a
                 a
                 """;
-        assertThat(Day6.everoneAnsweredYes(answers)).isEqualTo(1);
+        assertThat(Day6.everyoneAnsweredYes(answers)).isEqualTo(1);
         answers = """
                 ab
                 ac
                 """;
-        assertThat(Day6.everoneAnsweredYes(answers)).isEqualTo(1);
+        assertThat(Day6.everyoneAnsweredYes(answers)).isEqualTo(1);
         answers = """
                 b
                 """;
-        assertThat(Day6.everoneAnsweredYes(answers)).isEqualTo(1);
+        assertThat(Day6.everyoneAnsweredYes(answers)).isEqualTo(1);
 
     }
 
