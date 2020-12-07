@@ -1,6 +1,7 @@
 package de.tobiasbell.aoc_2020;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,9 +46,37 @@ public class Day7 {
                 );
     }
 
+    private static long bagsInside(final Map<String, List<BagRule>> graph, final String color) {
+        final List<BagRule> rules = graph.getOrDefault(color, Collections.emptyList());
+        return rules.stream()
+                .map(c -> c.count() + c.count() * bagsInside(graph, c.color()))
+                .mapToLong(l -> l)
+                .sum();
+    }
 
     public static long solve2(String input) {
-        return 0;
+        final Map<String, List<BagRule>> graph = parseBagGraph(input);
+        return bagsInside(graph, "shiny gold");
+    }
+
+    public static Map<String, List<BagRule>> parseBagGraph(final String input) {
+        Map<String, List<BagRule>> graph = new HashMap<>();
+        for (var line : input.split("\\R")) {
+            final String[] split = line.split(" ");
+            var color = split[0] + " " + split[1];
+            graph.put(color, BagRule.parse(line));
+        }
+        return graph;
+    }
+
+    public static record BagRule(String color, int count) {
+        private static final Pattern BAG_RULE_RE = Pattern.compile("(\\d+) (\\w+ \\w+) bags?[,.]");
+
+        public static List<BagRule> parse(final String input) {
+            return BAG_RULE_RE.matcher(input).results()
+                    .map(m -> new BagRule(m.group(2), Integer.parseInt(m.group(1))))
+                    .collect(Collectors.toList());
+        }
     }
 
 }
