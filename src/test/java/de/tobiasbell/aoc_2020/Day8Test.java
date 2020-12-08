@@ -48,6 +48,6 @@ class Day8Test {
         final long result = Day8.solve2(example);
         //then
         assertThat(result).isEqualTo(8);
-        assertThat(Day8.solve2(InputReader.getInput(8))).isEqualTo(1814L);
+        assertThat(Day8.solve2(InputReader.getInput(8))).isEqualTo(1056L);
     }
 }

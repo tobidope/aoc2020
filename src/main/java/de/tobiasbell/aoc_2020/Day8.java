@@ -22,10 +22,7 @@ public class Day8 {
         boolean[] visited = new boolean[instructions.size()];
         Arrays.fill(visited, false);
 
-        while (true) {
-            if (instructionPointer == instructions.size()) {
-                return new Result(accumulator, false);
-            }
+        while (instructionPointer < instructions.size()) {
             if (visited[instructionPointer]) {
                 return new Result(accumulator, true);
             }
@@ -41,6 +38,7 @@ public class Day8 {
                 default -> throw new IllegalStateException("Unexpected value: " + instruction.operation());
             }
         }
+        return new Result(accumulator, false);
     }
 
     public static Result evaluateWithFlipping(List<Instruction> instructions) {
