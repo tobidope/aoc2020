@@ -2,6 +2,7 @@ package de.tobiasbell.aoc_2020.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -33,10 +34,12 @@ public final class InputReader {
         return data.body();
     }
 
-    public static String getInput(final int day) throws IOException {
+    public static String getInput(final int day) {
         try (InputStream stream = InputReader.class.getResourceAsStream("/day" + day + ".txt")) {
             final byte[] bytes = stream.readAllBytes();
             return new String(bytes, StandardCharsets.UTF_8);
+        } catch (IOException ioe) {
+            throw new UncheckedIOException(ioe);
         }
     }
 
