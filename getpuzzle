@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 AOC_COOKIE=$(< cookie.txt)
 
-current_year=$((10#$(date +%Y)))
-current_day=$((10#$(date +%d)))
+current_year=$(date +%Y)
+current_day=${1:-$((10#$(date +%d)))}
 url=https://adventofcode.com/$current_year/day/$current_day/input
 echo "Downloading $url"
 curl "$url" \
