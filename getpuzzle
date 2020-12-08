@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+AOC_COOKIE=$(< cookie.txt)
+
+current_year=$((10#$(date +%Y)))
+current_day=$((10#$(date +%d)))
+url=https://adventofcode.com/$current_year/day/$current_day/input
+echo "Downloading $url"
+curl "$url" \
+  --silent \
+  --cookie "session=$AOC_COOKIE" \
+  --output "src/test/resources/day$current_day.txt"
