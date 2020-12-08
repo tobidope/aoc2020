@@ -24,32 +24,31 @@ public class Day8 {
 
         while (instructionPointer < instructions.size()) {
             if (visited[instructionPointer]) {
-                return new Result(accumulator, true);
+                return new Result(accumulator, State.LOOPS);
             }
             final Instruction instruction = instructions.get(instructionPointer);
             visited[instructionPointer] = true;
             switch (instruction.operation()) {
-                case "nop" -> instructionPointer++;
-                case "acc" -> {
+                case NOP -> instructionPointer++;
+                case ACC -> {
                     accumulator += instruction.argument();
                     instructionPointer++;
                 }
-                case "jmp" -> instructionPointer += instruction.argument();
-                default -> throw new IllegalStateException("Unexpected value: " + instruction.operation());
+                case JMP -> instructionPointer += instruction.argument();
             }
         }
-        return new Result(accumulator, false);
+        return new Result(accumulator, State.FINISHED);
     }
 
     public static Result evaluateWithFlipping(List<Instruction> instructions) {
         for (int i = 0; i < instructions.size(); i++) {
             final Instruction current = instructions.get(i);
-            if (current.operation().equals("acc")) {
+            if (current.operation() == Operation.ACC) {
                 continue;
             }
             instructions.set(i, current.flip());
             final Result result = evaluateInstructions(instructions);
-            if (!result.looped()) {
+            if (result.state() == State.FINISHED) {
                 return result;
             }
             instructions.set(i, current);
@@ -68,19 +67,34 @@ public class Day8 {
 
     }
 
-    public static record Result(int result, boolean looped) {
+    public enum Operation {
+        NOP, JMP, ACC;
+
+        public static Operation of(final String operation) {
+            return Arrays.stream(values())
+                    .filter(o -> o.name().equalsIgnoreCase(operation))
+                    .findFirst()
+                    .orElseThrow();
+        }
     }
 
-    public static record Instruction(String operation, int argument) {
+    public enum State {
+        FINISHED, LOOPS
+    }
+
+    public static record Result(int result, State state) {
+    }
+
+    public static record Instruction(Operation operation, int argument) {
         public static Instruction of(final String line) {
             final String[] split = line.split(" ");
-            return new Instruction(split[0], Integer.parseInt(split[1]));
+            return new Instruction(Operation.of(split[0]), Integer.parseInt(split[1]));
         }
 
         public Instruction flip() {
             return switch (operation) {
-                case "nop" -> new Instruction("jmp", this.argument());
-                case "jmp" -> new Instruction("nop", this.argument());
+                case NOP -> new Instruction(Operation.JMP, this.argument());
+                case JMP -> new Instruction(Operation.NOP, this.argument());
                 default -> this;
             };
         }
