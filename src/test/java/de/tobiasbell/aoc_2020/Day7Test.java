@@ -1,9 +1,8 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class Day7Test {
 
     @Test
-    void solve1() throws IOException {
+    void solve1() {
         var example = """                
                 light red bags contain 1 bright white bag, 2 muted yellow bags.
                 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
@@ -26,7 +25,7 @@ class Day7Test {
                 """;
         final long result = Day7.solve1(example);
         assertThat(result).isEqualTo(4);
-        assertThat(Day7.solve1(InputReader.getInput(7))).isEqualTo(326);
+        assertThat(Day7.solve1(Input.puzzleInput(7))).isEqualTo(326);
     }
 
     @Test
@@ -77,7 +76,7 @@ class Day7Test {
     }
 
     @Test
-    void solve2() throws IOException {
+    void solve2() {
         // given
         var example = """
                 shiny gold bags contain 2 dark red bags.
@@ -93,6 +92,6 @@ class Day7Test {
         //then
         assertThat(result).isEqualTo(126);
 
-        assertThat(Day7.solve2(InputReader.getInput(7))).isEqualTo(5635L);
+        assertThat(Day7.solve2(Input.puzzleInput(7))).isEqualTo(5635L);
     }
 }

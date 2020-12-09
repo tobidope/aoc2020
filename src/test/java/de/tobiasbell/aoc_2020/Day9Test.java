@@ -1,6 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +36,7 @@ class Day9Test {
         final long result = Day9.solve1(example, 5);
         //then
         assertThat(result).isEqualTo(127);
-        assertThat(Day9.solve1(InputReader.getInput(9), 25)).isEqualTo(167829540L);
+        assertThat(Day9.solve1(Input.puzzleInput(9), 25)).isEqualTo(167829540L);
     }
 
     @Test
@@ -68,6 +68,6 @@ class Day9Test {
         final long result = Day9.solve2(example, 127);
         //then
         assertThat(result).isEqualTo(62);
-        assertThat(Day9.solve2(InputReader.getInput(9), 167829540L)).isEqualTo(28045630L);
+        assertThat(Day9.solve2(Input.puzzleInput(9), 167829540L)).isEqualTo(28045630L);
     }
 }

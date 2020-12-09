@@ -8,15 +8,15 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public final class InputReader {
+public final class Input {
 
     public static final Pattern EMPTY_LINE_RE = Pattern.compile("^\\s*$", Pattern.MULTILINE);
 
-    private InputReader() {
+    private Input() {
     }
 
-    public static String getInput(final int day) {
-        try (InputStream stream = InputReader.class.getResourceAsStream("/day" + day + ".txt")) {
+    public static String puzzleInput(final int day) {
+        try (InputStream stream = Input.class.getResourceAsStream("/day" + day + ".txt")) {
             final byte[] bytes = stream.readAllBytes();
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (IOException ioe) {

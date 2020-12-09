@@ -1,6 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ public class Day5 {
     }
 
     public static long solve1(final String input) {
-        return InputReader.lines(input)
+        return Input.lines(input)
                 .mapToLong(Day5::computeSeatId)
                 .max()
                 .orElseThrow();
@@ -22,7 +22,7 @@ public class Day5 {
     }
 
     public static long findMissingSeatId(final String input) {
-        final List<Long> sortedSeatIds = InputReader.lines(input)
+        final List<Long> sortedSeatIds = Input.lines(input)
                 .map(Day5::computeSeatId)
                 .sorted()
                 .collect(Collectors.toList());

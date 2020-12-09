@@ -1,6 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ public class Day6 {
     }
 
     public static long solve1(final String input) {
-        return InputReader.splitByEmptyLines(input)
+        return Input.splitByEmptyLines(input)
                 .mapToLong(Day6::distinctAnswers)
                 .sum();
     }
@@ -33,7 +33,7 @@ public class Day6 {
     }
 
     public static long solve2(String input) {
-        return InputReader.splitByEmptyLines(input)
+        return Input.splitByEmptyLines(input)
                 .mapToLong(Day6::everyoneAnsweredYes)
                 .sum();
     }

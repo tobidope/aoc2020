@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static de.tobiasbell.aoc_2020.util.InputReader.lines;
+import static de.tobiasbell.aoc_2020.util.Input.lines;
 
 public class Day8 {
     private Day8() {

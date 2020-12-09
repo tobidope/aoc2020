@@ -1,9 +1,8 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,19 +20,19 @@ class Day1Test {
                 675
                 1456
                 """;
-        final List<Long> numbers = InputReader.lines(test)
+        final List<Long> numbers = Input.lines(test)
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
         assertThat(Day1.pairFinder(numbers)).containsExactlyInAnyOrder(1721, 299);
     }
 
     @Test
-    void solve1() throws IOException {
-        assertThat(Day1.solve1(InputReader.getInput(1))).isEqualTo(567171L);
+    void solve1() {
+        assertThat(Day1.solve1(Input.puzzleInput(1))).isEqualTo(567171L);
     }
 
     @Test
-    void solve2() throws IOException {
-        assertThat(Day1.solve2(InputReader.getInput(1))).isEqualTo(212428694L);
+    void solve2() {
+        assertThat(Day1.solve2(Input.puzzleInput(1))).isEqualTo(212428694L);
     }
 }

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class InputReaderTest {
+class InputTest {
 
     @Test
     void splitByEmptyLines() {
@@ -26,7 +26,7 @@ class InputReaderTest {
                 hcl:#cfa07d eyr:2025 pid:166559648
                 iyr:2011 ecl:brn hgt:59in
                 """;
-        final List<String> entries = InputReader.splitByEmptyLines(input)
+        final List<String> entries = Input.splitByEmptyLines(input)
                 .collect(Collectors.toList());
 
         assertThat(entries)

@@ -1,6 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -36,14 +36,14 @@ public class Day4 {
     }
 
     public static long solve1(final String input) {
-        return InputReader.splitByEmptyLines(input)
+        return Input.splitByEmptyLines(input)
                 .map(Day4::readPassport)
                 .filter(Day4::hasEnoughEntries)
                 .count();
     }
 
     public static long solve2(final String input) {
-        return InputReader.splitByEmptyLines(input)
+        return Input.splitByEmptyLines(input)
                 .map(Day4::readPassport)
                 .filter(Day4::hasEnoughEntries)
                 .filter(Day4::hasValidValues)

@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static de.tobiasbell.aoc_2020.util.InputReader.lines;
+import static de.tobiasbell.aoc_2020.util.Input.lines;
 
 public class Day2 {
     public static boolean isValid(PasswordLine p) {
@@ -17,7 +17,7 @@ public class Day2 {
     public static boolean isTobboganValid(PasswordLine p) {
         boolean firstMatch = p.line().charAt(p.min() - 1) == p.character();
         boolean secondMatch = p.line().charAt(p.max() - 1) == p.character();
-        return (firstMatch || secondMatch) && !(firstMatch && secondMatch);
+        return firstMatch ^ secondMatch;
     }
 
     public static long solve1(final String input) {

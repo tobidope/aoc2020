@@ -1,19 +1,19 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day3 {
     public static long solve1(final String input) {
-        final List<String> list = InputReader.lines(input).collect(Collectors.toList());
+        final List<String> list = Input.lines(input).collect(Collectors.toList());
         final TreeMap map = new TreeMap(list);
         return visitedTrees(map, 3, 1);
     }
 
     public static long solve2(String input) {
-        final List<String> list = InputReader.lines(input).collect(Collectors.toList());
+        final List<String> list = Input.lines(input).collect(Collectors.toList());
         final TreeMap map = new TreeMap(list);
         return visitedTrees(map, 1, 1)
                 * visitedTrees(map, 3, 1)

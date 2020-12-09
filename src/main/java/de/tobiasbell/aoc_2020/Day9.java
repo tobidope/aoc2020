@@ -1,6 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class Day9 {
 
     @NotNull
     private static List<Long> parseNumbers(String input) {
-        return InputReader.lines(input)
+        return Input.lines(input)
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
     }

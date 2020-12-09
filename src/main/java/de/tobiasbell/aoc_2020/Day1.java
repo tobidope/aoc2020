@@ -3,7 +3,7 @@ package de.tobiasbell.aoc_2020;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static de.tobiasbell.aoc_2020.util.InputReader.lines;
+import static de.tobiasbell.aoc_2020.util.Input.lines;
 
 public class Day1 {
     public static final int EXPECTED = 2020;

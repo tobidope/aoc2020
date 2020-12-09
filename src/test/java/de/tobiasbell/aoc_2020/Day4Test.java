@@ -1,9 +1,8 @@
 package de.tobiasbell.aoc_2020;
 
-import de.tobiasbell.aoc_2020.util.InputReader;
+import de.tobiasbell.aoc_2020.util.Input;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,12 +60,12 @@ class Day4Test {
     }
 
     @Test
-    void solve1() throws IOException {
-        assertThat(Day4.solve1(InputReader.getInput(4))).isEqualTo(210);
+    void solve1() {
+        assertThat(Day4.solve1(Input.puzzleInput(4))).isEqualTo(210);
     }
 
     @Test
-    void solve2() throws IOException {
-        assertThat(Day4.solve2(InputReader.getInput(4))).isEqualTo(131L);
+    void solve2() {
+        assertThat(Day4.solve2(Input.puzzleInput(4))).isEqualTo(131L);
     }
 }
