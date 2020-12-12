@@ -39,6 +39,37 @@ public class Day11 {
         return newGrid;
     }
 
+    public static long solve2(String puzzle) {
+        Grid grid = Grid.parse(puzzle);
+        var changed = false;
+        do {
+            Grid newGrid = mutateNew(grid);
+            changed = !grid.equals(newGrid);
+            grid = newGrid;
+        } while (changed);
+
+        return grid.occupiedSeats();
+
+    }
+
+    private static Grid mutateNew(Grid grid) {
+        var newGrid = new Grid(grid);
+        for (int x = 0; x < grid.rows(); x++) {
+            for (int y = 0; y < grid.columns(); y++) {
+                Place currentPlace = grid.get(x, y);
+                final long seats = grid.seatsInSight(x, y);
+                if (currentPlace == Place.EMPTY_SEAT && seats == 0) {
+                    currentPlace = Place.OCCUPIED_SEAT;
+                } else if (currentPlace == Place.OCCUPIED_SEAT && seats >= 5) {
+                    currentPlace = Place.EMPTY_SEAT;
+                }
+                newGrid.put(x, y, currentPlace);
+            }
+        }
+        return newGrid;
+
+    }
+
     public enum Place {
         FLOOR('.'),
         EMPTY_SEAT('L'),
@@ -151,6 +182,100 @@ public class Day11 {
             return grid.stream()
                     .map(l -> l.stream().map(Objects::toString).collect(Collectors.joining("")))
                     .collect(Collectors.joining("\n"));
+        }
+
+        public int seatsInSight(int x, int y) {
+            var count = 0;
+            // Up
+            for (int i = x - 1; i >= 0; i--) {
+                final Place place = get(i, y);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+            }
+            // Down
+            for (int i = x + 1; i < rows(); i++) {
+                final Place place = get(i, y);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+
+            }
+            // Left
+            for (int i = y - 1; i >= 0; i--) {
+                final Place place = get(x, i);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+            }
+            // Right
+            for (int i = y + 1; i < columns(); i++) {
+                final Place place = get(x, i);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+            }
+            // Up right
+            for (int i = 1; x - i >= 0 && y + i < columns(); i++) {
+                final Place place = get(x - i, y + i);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+            }
+            // Up left
+            for (int i = 1; x - i >= 0 && y - i >= 0; i++) {
+                final Place place = get(x - i, y - i);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+            }
+            // Down right
+            for (int i = 1; x + i < rows() && y + i < columns(); i++) {
+                final Place place = get(x + i, y + i);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+            }
+            // Down left
+            for (int i = 1; x + i < rows() && y - i >= 0; i++) {
+                final Place place = get(x + i, y - i);
+                if (place == Place.OCCUPIED_SEAT) {
+                    count++;
+                    break;
+                }
+                if (place == Place.EMPTY_SEAT) {
+                    break;
+                }
+            }
+            return count;
         }
     }
 
