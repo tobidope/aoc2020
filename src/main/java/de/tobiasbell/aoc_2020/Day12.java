@@ -14,7 +14,6 @@ public class Day12 {
         for (var instruction : instructions) {
             ferryState = ferryState.move(instruction);
         }
-
         return ferryState.distance();
     }
 
@@ -28,14 +27,14 @@ public class Day12 {
         public Direction turn(Instruction instruction) {
             final int turns = instruction.value() / 90;
             int newDirection = switch (instruction.action()) {
-                case L -> ordinal() - turns;
-                case R -> ordinal() + turns;
+                case L -> (ordinal() - turns) % values().length;
+                case R -> (ordinal() + turns) % values().length;
                 default -> throw new IllegalStateException("Unexpected value: " + instruction.action());
             };
             if (newDirection < 0) {
                 newDirection = values().length + newDirection;
             }
-            return values()[newDirection % values().length];
+            return values()[newDirection];
         }
     }
 
