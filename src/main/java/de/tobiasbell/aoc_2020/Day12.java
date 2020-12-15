@@ -7,34 +7,85 @@ import java.util.stream.Collectors;
 
 public class Day12 {
     public static long solve1(String puzzle) {
-        FerryState ferryState = new FerryState(0, 0, Direction.EAST);
         final List<Instruction> instructions = Input.lines(puzzle)
                 .map(Instruction::of)
                 .collect(Collectors.toList());
+        Vector ferry = new Vector(0, 0);
+        Vector direction = new Vector(1, 0);
         for (var instruction : instructions) {
-            ferryState = ferryState.move(instruction);
+            switch (instruction.action) {
+                case N -> ferry = ferry.add(0, instruction.value);
+                case S -> ferry = ferry.add(0, -instruction.value);
+                case E -> ferry = ferry.add(instruction.value, 0);
+                case W -> ferry = ferry.add(-instruction.value, 0);
+                case F -> ferry = ferry.add(direction.multiply(instruction.value));
+                case L -> {
+                    for (int i = 0; i < instruction.value / 90; i++) {
+                        direction = direction.multiply(new Vector(0, 1));
+                    }
+                }
+                case R -> {
+                    for (int i = 0; i < instruction.value / 90; i++) {
+                        direction = direction.multiply(new Vector(0, -1));
+                    }
+                }
+            }
         }
-        return ferryState.distance();
+        return ferry.distance();
+    }
+
+    public static long solve2(String puzzle) {
+        final List<Instruction> instructions = Input.lines(puzzle)
+                .map(Instruction::of)
+                .collect(Collectors.toList());
+        Vector ferry = new Vector(0, 0);
+        Vector waypoint = new Vector(10, 1);
+        for (var instruction : instructions) {
+            switch (instruction.action) {
+                case N -> waypoint = waypoint.add(0, instruction.value);
+                case S -> waypoint = waypoint.add(0, -instruction.value);
+                case E -> waypoint = waypoint.add(instruction.value, 0);
+                case W -> waypoint = waypoint.add(-instruction.value, 0);
+                case F -> ferry = ferry.add(waypoint.multiply(instruction.value));
+                case L -> {
+                    for (int i = 0; i < instruction.value / 90; i++) {
+                        waypoint = new Vector(-waypoint.y, waypoint.x);
+                    }
+                }
+                case R -> {
+                    for (int i = 0; i < instruction.value / 90; i++) {
+                        waypoint = new Vector(waypoint.y, -waypoint.x);
+                    }
+                }
+            }
+        }
+        return ferry.distance();
     }
 
     public enum Action {
         N, S, E, W, L, R, F
     }
 
-    public enum Direction {
-        NORTH, EAST, SOUTH, WEST;
 
-        public Direction turn(Instruction instruction) {
-            final int turns = instruction.value() / 90;
-            int newDirection = switch (instruction.action()) {
-                case L -> (ordinal() - turns) % values().length;
-                case R -> (ordinal() + turns) % values().length;
-                default -> throw new IllegalStateException("Unexpected value: " + instruction.action());
-            };
-            if (newDirection < 0) {
-                newDirection = values().length + newDirection;
-            }
-            return values()[newDirection];
+    public final record Vector(int x, int y) {
+        public Vector add(int x, int y) {
+            return new Vector(this.x + x, this.y + y);
+        }
+
+        public Vector add(Vector vector) {
+            return add(vector.x, vector.y);
+        }
+
+        public Vector multiply(int factor) {
+            return new Vector(x * factor, y * factor);
+        }
+
+        public Vector multiply(Vector vector) {
+            return new Vector(x * vector.x - y * vector.y, x * vector.y + vector.x * y);
+        }
+
+        public long distance() {
+            return Math.abs(x) + Math.abs(y);
         }
     }
 
@@ -43,32 +94,6 @@ public class Day12 {
             return new Instruction(
                     Action.valueOf(input.substring(0, 1)),
                     Integer.parseInt(input.substring(1)));
-        }
-    }
-
-    public record FerryState(int x, int y, Direction direction) {
-        FerryState move(Instruction i) {
-            return switch (i.action()) {
-                case N -> new FerryState(x + i.value, y, direction);
-                case S -> new FerryState(x - i.value, y, direction);
-                case E -> new FerryState(x, y + i.value, direction);
-                case W -> new FerryState(x, y - i.value, direction);
-                case L, R -> new FerryState(x, y, direction.turn(i));
-                case F -> moveForward(i.value);
-            };
-        }
-
-        private FerryState moveForward(int value) {
-            return switch (direction) {
-                case NORTH -> new FerryState(x + value, y, direction);
-                case SOUTH -> new FerryState(x - value, y, direction);
-                case EAST -> new FerryState(x, y + value, direction);
-                case WEST -> new FerryState(x, y - value, direction);
-            };
-        }
-
-        public long distance() {
-            return Math.abs(x) + Math.abs(y);
         }
     }
 }

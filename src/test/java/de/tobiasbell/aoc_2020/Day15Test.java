@@ -1,5 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
+import de.tobiasbell.aoc_2020.util.Input;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,16 +35,15 @@ class Day15Test {
         assertThat(game.sayUntilTurn(10)).isEqualTo(0);
         assertThat(new Day15.MemoryGame(List.of(1, 3, 2)).sayUntilTurn(2020)).isEqualTo(1);
         assertThat(new Day15.MemoryGame(List.of(2, 1, 3)).sayUntilTurn(2020)).isEqualTo(10);
-        assertThat(new Day15.MemoryGame(List.of(0, 3, 6)).sayUntilTurn(30000000)).isEqualTo(175594);
     }
 
     @Test
     void solve1() {
-        assertThat(Day15.solve1()).isEqualTo(1618L);
+        assertThat(Day15.solve1(Input.puzzleInput(15))).isEqualTo(1618L);
     }
 
     @Test
     void solve2() {
-        assertThat(Day15.solve2()).isEqualTo(548531L);
+        assertThat(Day15.solve2(Input.puzzleInput(15))).isEqualTo(548531L);
     }
 }
