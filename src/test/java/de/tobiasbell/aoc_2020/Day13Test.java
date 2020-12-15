@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.time.Duration;
 import java.util.SortedMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 class Day13Test {
 
@@ -30,9 +32,11 @@ class Day13Test {
     @Disabled
     void solve2() {
         // when
-        final long result = Day13.solve2(Input.puzzleInput(13));
-        //then
-        assertThat(result).isEqualTo(0);
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            final long result = Day13.solve2(Input.puzzleInput(13));
+            //then
+            assertThat(result).isEqualTo(0);
+        });
     }
 
     @ParameterizedTest
@@ -54,9 +58,11 @@ class Day13Test {
                 """;
         final SortedMap<Integer, Integer> map = Day13.parse(example);
         // when
-        final long firstMatchingOffset = Day13.findFirstMatchingOffsets(map, 0);
-        //then
-        assertThat(firstMatchingOffset).isEqualTo(1068781);
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            final long firstMatchingOffset = Day13.findFirstMatchingOffsets(map, 0);
+            //then
+            assertThat(firstMatchingOffset).isEqualTo(1068781);
+        });
     }
 
     @Test
@@ -68,9 +74,11 @@ class Day13Test {
                 """;
         final SortedMap<Integer, Integer> map = Day13.parse(example);
         // when
-        final long firstMatchingOffset = Day13.findFirstMatchingOffsets(map, 0);
-        //then
-        assertThat(firstMatchingOffset).isEqualTo(3417);
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            final long firstMatchingOffset = Day13.findFirstMatchingOffsets(map, 0);
+            //then
+            assertThat(firstMatchingOffset).isEqualTo(3417);
+        });
     }
 
     @Test
@@ -82,8 +90,10 @@ class Day13Test {
                 """;
         final SortedMap<Integer, Integer> map = Day13.parse(example);
         // when
-        final long firstMatchingOffset = Day13.findFirstMatchingOffsets(map, 1000000000L);
-        //then
-        assertThat(firstMatchingOffset).isEqualTo(1202161486L);
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            final long firstMatchingOffset = Day13.findFirstMatchingOffsets(map, 1000000000L);
+            //then
+            assertThat(firstMatchingOffset).isEqualTo(1202161486L);
+        });
     }
 }

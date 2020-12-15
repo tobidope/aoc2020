@@ -17,11 +17,6 @@ public class Day14 {
             switch (at) {
                 case '1' -> value |= (1L << bit);
                 case '0' -> value &= ~(1L << bit);
-                case 'X' -> {
-                }
-                default -> {
-                    throw new IllegalArgumentException(String.valueOf(at));
-                }
             }
         }
         return value;
