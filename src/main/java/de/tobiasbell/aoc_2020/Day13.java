@@ -1,9 +1,7 @@
 package de.tobiasbell.aoc_2020;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class Day13 {
@@ -36,41 +34,34 @@ public class Day13 {
     }
 
     public static long solve2(final String puzzle) {
-        SortedMap<Integer, Integer> offsetToLine = parse(puzzle);
-        return findFirstMatchingOffsets(offsetToLine, 100000000000000L);
-    }
+        final List<BusOffset> busses = BusOffset.parse(puzzle.split("\\R")[1]);
+        long timeStamp = 0;
+        long leastCommonMultiple = 1;
 
-    public static long findFirstMatchingOffsets(SortedMap<Integer, Integer> offsetToLine, long startTimeStamp) {
-        long result = -1;
-        final Map.Entry<Integer, Integer> maxValueEntry = offsetToLine.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .get();
-        var offset = maxValueEntry.getKey();
-        var step = maxValueEntry.getValue();
-        var start = startTimeStamp - timestampOffset(startTimeStamp, step) + step - offset;
-        for (long i = start; ; i += step) {
-            long candidate = i;
-            var found = offsetToLine.entrySet().stream()
-                    .allMatch(entry -> timestampOffset(candidate, entry.getValue()) == entry.getKey());
-            if (found) {
-                result = candidate;
-                break;
+        for (int i = 0; i < busses.size() - 1; i++) {
+            final var nextBus = busses.get(i + 1);
+            final BusOffset currentBus = busses.get(i);
+            leastCommonMultiple *= currentBus.busLine;
+            while ((timeStamp + nextBus.offset) % nextBus.busLine != 0) {
+                timeStamp += leastCommonMultiple;
             }
         }
-        return result;
+        return timeStamp;
     }
 
-    public static SortedMap<Integer, Integer> parse(String puzzle) {
-        SortedMap<Integer, Integer> map = new TreeMap<>();
-        final String[] split = puzzle.split("\\R");
-        final String[] busLines = split[1].split(",");
-        for (int i = 0; i < busLines.length; i++) {
-            if (busLines[i].equals("x")) {
-                continue;
+    public record BusOffset(int busLine, int offset) {
+        public static List<BusOffset> parse(final String input) {
+            List<BusOffset> result = new ArrayList<>();
+            final String[] split = input.trim().split(",");
+            for (int i = 0; i < split.length; i++) {
+                var entry = split[i];
+                if (entry.equals("x")) {
+                    continue;
+                }
+                result.add(new BusOffset(Integer.parseInt(entry), i));
             }
-            map.put(i, Integer.parseInt(busLines[i]));
+            return result;
         }
-        return map;
     }
 
     public record Note(int earliestDeparture, List<String> busLines) {
