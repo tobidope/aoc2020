@@ -1,7 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
 import de.tobiasbell.aoc_2020.util.Input;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,7 +24,6 @@ class Day13Test {
     }
 
     @Test
-    @Disabled
     void solve2() {
         // when
         final long result = Day13.solve2(Input.puzzleInput(13));

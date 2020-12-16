@@ -40,7 +40,7 @@ public class Day13 {
 
         for (int i = 0; i < busses.size() - 1; i++) {
             final var nextBus = busses.get(i + 1);
-            final BusOffset currentBus = busses.get(i);
+            final var currentBus = busses.get(i);
             leastCommonMultiple *= currentBus.busLine;
             while ((timeStamp + nextBus.offset) % nextBus.busLine != 0) {
                 timeStamp += leastCommonMultiple;
