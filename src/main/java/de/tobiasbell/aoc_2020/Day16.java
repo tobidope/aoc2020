@@ -3,20 +3,24 @@ package de.tobiasbell.aoc_2020;
 import de.tobiasbell.aoc_2020.util.Input;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Day16 {
+
+    private Day16() {
+    }
 
     public static long solve1(final String puzzle) {
         final List<String> parts = Input.splitByEmptyLines(puzzle)
                 .collect(Collectors.toList());
-        Map<String, Set<Integer>> rules = parseRules(parts.get(0));
+        List<Rule> rules = parseRules(parts.get(0));
         List<List<Integer>> nearbyTickets = parseTicketFields(parts.get(2));
         return nearbyTickets.stream()
                 .flatMap(List::stream)
-                .filter(number -> rules.values().stream().noneMatch(s -> s.contains(number)))
+                .filter(number -> rules.stream().noneMatch(rule -> rule.test(number)))
                 .mapToInt(Integer::intValue)
                 .sum();
     }
@@ -24,38 +28,57 @@ public class Day16 {
     public static long solve2(final String puzzle) {
         final List<String> parts = Input.splitByEmptyLines(puzzle)
                 .collect(Collectors.toList());
-        Map<String, Set<Integer>> rules = parseRules(parts.get(0));
-        List<Integer> myTicket = parseTicketFields(parts.get(1)).get(0);
+        List<Rule> rules = parseRules(parts.get(0));
+        var allRulesPredicate = rules.stream()
+                .map(Predicate.class::cast)
+                .reduce(n -> false, Predicate::or);
+        List<Integer> ticket = parseTicketFields(parts.get(1)).get(0);
         List<List<Integer>> nearbyTickets = parseTicketFields(parts.get(2));
         var validTickets = nearbyTickets.stream()
-                .filter(ticket -> ticket.stream()
-                        .allMatch(number -> rules.values().stream()
-                                .anyMatch(s -> s.contains(number))))
+                .filter(t -> t.stream().allMatch(allRulesPredicate))
                 .collect(Collectors.toList());
-        Map<String, Integer> rulePosition = findRulePosition(rules, validTickets);
-        return rulePosition.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith("departure"))
+        Map<String, Integer> ruleToPosition = findRulePositions(rules, validTickets);
+        return ruleToPosition.entrySet().stream()
+                .filter(e -> e.getKey().startsWith("departure"))
                 .map(Map.Entry::getValue)
-                .mapToInt(myTicket::get)
-                .reduce(1, (a, b) -> a * b)
-                ;
+                .mapToLong(ticket::get)
+                .reduce(1, (a, b) -> a * b);
     }
 
-    private static Map<String, Integer> findRulePosition(Map<String, Set<Integer>> rules, List<List<Integer>> validTickets) {
-        var ticketLength = validTickets.get(0).size();
-        Map<String, Integer> rulePosition = new HashMap<>();
-        for (int position = 0; position < ticketLength; position++) {
-            var i = position;
-            final Set<Integer> valuesOnPosition = validTickets.stream().map(t -> t.get(i)).collect(Collectors.toSet());
-            final String rule = rules.entrySet().stream()
-                    .filter(e -> e.getValue().containsAll(valuesOnPosition))
-                    .filter(e -> !rulePosition.containsKey(e))
-                    .findFirst()
-                    .map(Map.Entry::getKey).get();
-            rulePosition.put(rule, position);
+    private static Map<String, Integer> findRulePositions(List<Rule> rules, List<List<Integer>> validTickets) {
+        var ticketSize = validTickets.get(0).size();
+        Map<String, Integer> result = new HashMap<>();
+        Map<Integer, List<Rule>> map = new HashMap<>();
+        for (int position = 0; position < ticketSize; position++) {
+            int i = position;
+            var column = validTickets.stream().map(t -> t.get(i)).collect(Collectors.toList());
+            var matchingRules =
+                    rules.stream().filter(r -> column.stream()
+                            .allMatch(r::test))
+                            .filter(r -> !result.containsKey(r.getName()))
+                            .collect(Collectors.toList());
+            if (matchingRules.size() == 1) {
+                final var ruleFound = matchingRules.get(0);
+                result.put(ruleFound.getName(), position);
+                map.values().forEach(ruleList -> ruleList.remove(ruleFound));
+            } else {
+                map.put(position, matchingRules);
+            }
         }
-        return rulePosition;
+        while (result.size() < ticketSize) {
+            final var finalRules = map.entrySet().stream()
+                    .filter(e -> e.getValue().size() == 1)
+                    .collect(Collectors.toList());
+            for (var r : finalRules) {
+                map.remove(r.getKey());
+                final var rule = r.getValue().get(0);
+                map.values().forEach(ruleList -> ruleList.remove(rule));
+                result.put(rule.getName(), r.getKey());
+            }
+        }
+        return result;
     }
+
 
     private static List<List<Integer>> parseTicketFields(String tickets) {
         List<List<Integer>> ticketFields = new ArrayList<>();
@@ -69,23 +92,48 @@ public class Day16 {
         return ticketFields;
     }
 
-    private static Map<String, Set<Integer>> parseRules(String rules) {
-        final Pattern ranges = Pattern.compile("(\\d+)-(\\d+)");
-        var ruleMap = new HashMap<String, Set<Integer>>();
-        for (var line : rules.split("\\R")) {
-            final String[] split = line.split(":");
-            String key = split[0];
-            Set<Integer> set = ranges.matcher(rules).results()
-                    .flatMap(m ->
-                            IntStream.rangeClosed(
-                                    Integer.parseInt(m.group(1)),
-                                    Integer.parseInt(m.group(2)))
-                                    .boxed())
-                    .collect(Collectors.toSet());
-            ruleMap.put(key, set);
-        }
-        return ruleMap;
+    private static List<Rule> parseRules(String rules) {
+        return Input.lines(rules)
+                .map(Rule::of)
+                .collect(Collectors.toList());
     }
 
+    public static class Rule implements Predicate<Integer> {
+        public static final Pattern RULE_PATTERN = Pattern.compile("([^:]+): (\\d+)-(\\d+) or (\\d+)-(\\d+)");
+        private final String name;
+        private final int firstLow;
+        private final int firstHigh;
+        private final int secondLow;
+        private final int secondHigh;
 
+        public Rule(String name, int firstLow, int firstHigh, int secondLow, int secondHigh) {
+            this.name = name;
+            this.firstLow = firstLow;
+            this.firstHigh = firstHigh;
+            this.secondLow = secondLow;
+            this.secondHigh = secondHigh;
+        }
+
+        public static Rule of(final String input) {
+            final Matcher m = RULE_PATTERN.matcher(input);
+            if (m.matches()) {
+                final var name = m.group(1);
+                final var first = Integer.parseInt(m.group(2));
+                final var second = Integer.parseInt(m.group(3));
+                final var third = Integer.parseInt(m.group(4));
+                final var fourth = Integer.parseInt(m.group(5));
+                return new Rule(name, first, second, third, fourth);
+            }
+            throw new IllegalArgumentException("Couldn't parse input: " + input);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean test(Integer value) {
+            return (firstLow <= value && value <= firstHigh) || (secondLow <= value && value <= secondHigh);
+        }
+    }
 }

@@ -30,24 +30,21 @@ class Day16Test {
     }
 
     @Test
-    void solve2() {
+    void testRule() {
         // given
-        var example = """
-                class: 0-1 or 4-19
-                row: 0-5 or 8-19
-                seat: 0-13 or 16-19
-                               
-                your ticket:
-                11,12,13
-                               
-                nearby tickets:
-                3,9,18
-                15,1,5
-                5,14,9""";
+        var input = "class: 0-1 or 4-19";
         // when
-        final long result = Day16.solve2(example);
+        final var rule = Day16.Rule.of(input);
         //then
-        //assertThat(result).isEqualTo(71);
-        assertThat(Day16.solve2(Input.puzzleInput(16))).isEqualTo(23044);
+        assertThat(rule.getName()).isEqualTo("class");
+        assertThat(rule)
+                .accepts(0, 1, 4, 5, 6, 18, 19)
+                .rejects(3, 2, -1, 20);
+
+    }
+
+    @Test
+    void solve2() {
+        assertThat(Day16.solve2(Input.puzzleInput(16))).isEqualTo(3765150732757L);
     }
 }
