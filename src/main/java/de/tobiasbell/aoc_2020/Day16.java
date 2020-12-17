@@ -48,7 +48,7 @@ public class Day16 {
     private static Map<String, Integer> findRulePositions(List<Rule> rules, List<List<Integer>> validTickets) {
         var ticketSize = validTickets.get(0).size();
         Map<String, Integer> result = new HashMap<>();
-        Map<Integer, List<Rule>> map = new HashMap<>();
+        Map<Integer, List<Rule>> candidates = new HashMap<>();
         for (int position = 0; position < ticketSize; position++) {
             int i = position;
             var column = validTickets.stream().map(t -> t.get(i)).collect(Collectors.toList());
@@ -60,21 +60,21 @@ public class Day16 {
             if (matchingRules.size() == 1) {
                 final var ruleFound = matchingRules.get(0);
                 result.put(ruleFound.getName(), position);
-                map.values().forEach(ruleList -> ruleList.remove(ruleFound));
+                candidates.values().forEach(ruleList -> ruleList.remove(ruleFound));
             } else {
-                map.put(position, matchingRules);
+                candidates.put(position, matchingRules);
             }
         }
         while (result.size() < ticketSize) {
-            final var finalRules = map.entrySet().stream()
+            final var finalRule = candidates.entrySet().stream()
                     .filter(e -> e.getValue().size() == 1)
-                    .collect(Collectors.toList());
-            for (var r : finalRules) {
-                map.remove(r.getKey());
-                final var rule = r.getValue().get(0);
-                map.values().forEach(ruleList -> ruleList.remove(rule));
-                result.put(rule.getName(), r.getKey());
-            }
+                    .findFirst()
+                    .orElseThrow();
+            candidates.remove(finalRule.getKey());
+            final var rule = finalRule.getValue().get(0);
+            candidates.values().forEach(ruleList -> ruleList.remove(rule));
+            result.put(rule.getName(), finalRule.getKey());
+
         }
         return result;
     }
