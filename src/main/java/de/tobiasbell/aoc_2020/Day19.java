@@ -15,7 +15,7 @@ public class Day19 {
         final Rule ruleZero = rules.get(0);
         return Input.lines(input.get(1))
                 .map(s -> ruleZero.matches(s, rules))
-                .filter(result -> result.equals(Optional.of("")))
+                .filter(matches -> matches.stream().anyMatch(Match::isFullMatch))
                 .count();
     }
 
@@ -29,7 +29,7 @@ public class Day19 {
         final Rule ruleZero = rules.get(0);
         return Input.lines(input.get(1))
                 .map(s -> ruleZero.matches(s, rules))
-                .filter(result -> result.equals(Optional.of("")))
+                .filter(matches -> matches.stream().anyMatch(Match::isFullMatch))
                 .count();
     }
 
@@ -51,7 +51,7 @@ public class Day19 {
     }
 
     public interface Rule {
-        Optional<String> matches(final String input, Map<Integer, Rule> rules);
+        List<Match> matches(final String input, Map<Integer, Rule> rules);
     }
 
     public static record LiteralRule(char c) implements Rule {
@@ -62,13 +62,15 @@ public class Day19 {
         }
 
         @Override
-        public Optional<String> matches(String input, final Map<Integer, Rule> rule) {
+        public List<Match> matches(String input, final Map<Integer, Rule> rule) {
+            List<Match> matches = new ArrayList<>();
             if (input.isEmpty()) {
-                return Optional.empty();
+                return matches;
             }
-            return input.charAt(0) == c
-                    ? Optional.of(input.substring(1))
-                    : Optional.empty();
+            if (input.charAt(0) == c) {
+                matches.add(new Match(input.substring(1)));
+            }
+            return matches;
         }
     }
 
@@ -81,15 +83,18 @@ public class Day19 {
         }
 
         @Override
-        public Optional<String> matches(String input, final Map<Integer, Rule> rules) {
-            Optional<String> result = Optional.of(input);
+        public List<Match> matches(String input, final Map<Integer, Rule> rules) {
+            List<Match> matches = new ArrayList<>();
+            matches.add(new Match(input));
             for (int backreference : backreferences) {
-                result = rules.get(backreference).matches(result.get(), rules);
-                if (result.isEmpty()) {
-                    break;
+                List<Match> newMatches = new ArrayList<>();
+                for (var m : matches) {
+                    final List<Match> matchList = rules.get(backreference).matches(m.remaining(), rules);
+                    newMatches.addAll(matchList);
                 }
+                matches = newMatches;
             }
-            return result;
+            return matches;
         }
     }
 
@@ -100,12 +105,11 @@ public class Day19 {
         }
 
         @Override
-        public Optional<String> matches(String input, final Map<Integer, Rule> rules) {
-            Optional<String> match = left.matches(input, rules);
-            if (match.isEmpty()) {
-                match = right.matches(input, rules);
-            }
-            return match;
+        public List<Match> matches(String input, final Map<Integer, Rule> rules) {
+            List<Match> matches = new ArrayList<>();
+            matches.addAll(left.matches(input, rules));
+            matches.addAll(right.matches(input, rules));
+            return matches;
         }
     }
 

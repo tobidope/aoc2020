@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -19,7 +18,7 @@ class Day19Test {
 
     @Test
     void solve2() {
-        assertThat(Day19.solve2(Input.puzzleInput(19))).isEqualTo(142);
+        assertThat(Day19.solve2(Input.puzzleInput(19))).isEqualTo(294L);
     }
 
     @Test
@@ -36,11 +35,11 @@ class Day19Test {
         final Map<Integer, Day19.Rule> rules = Day19.parseRules(example);
         final Day19.Rule ruleZero = rules.get(0);
         //then
-        assertThat(ruleZero.matches("ababbb", rules)).isEqualTo(Optional.of(""));
-        assertThat(ruleZero.matches("abbbab", rules)).isEqualTo(Optional.of(""));
-        assertThat(ruleZero.matches("bababa", rules)).isNotEqualTo(Optional.of(""));
-        assertThat(ruleZero.matches("aaabbb", rules)).isNotEqualTo(Optional.of(""));
-        assertThat(ruleZero.matches("aaaabbb", rules)).isNotEqualTo(Optional.of(""));
+        assertThat(ruleZero.matches("ababbb", rules)).contains(new Day19.Match(""));
+        assertThat(ruleZero.matches("abbbab", rules)).contains(new Day19.Match(""));
+        assertThat(ruleZero.matches("bababa", rules)).doesNotContain(new Day19.Match(""));
+        assertThat(ruleZero.matches("aaabbb", rules)).doesNotContain(new Day19.Match(""));
+        assertThat(ruleZero.matches("aaaabbb", rules)).doesNotContain(new Day19.Match(""));
     }
 
     @Test
