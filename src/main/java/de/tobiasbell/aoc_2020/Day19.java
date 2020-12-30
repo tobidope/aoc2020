@@ -15,7 +15,7 @@ public class Day19 {
         final Rule ruleZero = rules.get(0);
         return Input.lines(input.get(1))
                 .map(s -> ruleZero.matches(s, rules))
-                .filter(matches -> matches.stream().anyMatch(Match::isFullMatch))
+                .filter(matches -> matches.contains(""))
                 .count();
     }
 
@@ -29,7 +29,7 @@ public class Day19 {
         final Rule ruleZero = rules.get(0);
         return Input.lines(input.get(1))
                 .map(s -> ruleZero.matches(s, rules))
-                .filter(matches -> matches.stream().anyMatch(Match::isFullMatch))
+                .filter(matches -> matches.contains(""))
                 .count();
     }
 
@@ -51,7 +51,7 @@ public class Day19 {
     }
 
     public interface Rule {
-        List<Match> matches(final String input, Map<Integer, Rule> rules);
+        List<String> matches(final String input, Map<Integer, Rule> rules);
     }
 
     public static record LiteralRule(char c) implements Rule {
@@ -62,13 +62,13 @@ public class Day19 {
         }
 
         @Override
-        public List<Match> matches(String input, final Map<Integer, Rule> rule) {
-            List<Match> matches = new ArrayList<>();
+        public List<String> matches(String input, final Map<Integer, Rule> rule) {
+            List<String> matches = new ArrayList<>();
             if (input.isEmpty()) {
                 return matches;
             }
             if (input.charAt(0) == c) {
-                matches.add(new Match(input.substring(1)));
+                matches.add(input.substring(1));
             }
             return matches;
         }
@@ -83,13 +83,13 @@ public class Day19 {
         }
 
         @Override
-        public List<Match> matches(String input, final Map<Integer, Rule> rules) {
-            List<Match> matches = new ArrayList<>();
-            matches.add(new Match(input));
+        public List<String> matches(String input, final Map<Integer, Rule> rules) {
+            List<String> matches = new ArrayList<>();
+            matches.add(input);
             for (int backreference : backreferences) {
-                List<Match> newMatches = new ArrayList<>();
+                List<String> newMatches = new ArrayList<>();
                 for (var m : matches) {
-                    final List<Match> matchList = rules.get(backreference).matches(m.remaining(), rules);
+                    final List<String> matchList = rules.get(backreference).matches(m, rules);
                     newMatches.addAll(matchList);
                 }
                 matches = newMatches;
@@ -105,19 +105,11 @@ public class Day19 {
         }
 
         @Override
-        public List<Match> matches(String input, final Map<Integer, Rule> rules) {
-            List<Match> matches = new ArrayList<>();
+        public List<String> matches(String input, final Map<Integer, Rule> rules) {
+            List<String> matches = new ArrayList<>();
             matches.addAll(left.matches(input, rules));
             matches.addAll(right.matches(input, rules));
             return matches;
         }
     }
-
-    public static record Match(String remaining) {
-        public boolean isFullMatch() {
-            return remaining.isEmpty();
-        }
-    }
-
-
 }

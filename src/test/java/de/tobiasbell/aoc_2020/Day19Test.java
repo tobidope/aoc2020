@@ -35,11 +35,11 @@ class Day19Test {
         final Map<Integer, Day19.Rule> rules = Day19.parseRules(example);
         final Day19.Rule ruleZero = rules.get(0);
         //then
-        assertThat(ruleZero.matches("ababbb", rules)).contains(new Day19.Match(""));
-        assertThat(ruleZero.matches("abbbab", rules)).contains(new Day19.Match(""));
-        assertThat(ruleZero.matches("bababa", rules)).doesNotContain(new Day19.Match(""));
-        assertThat(ruleZero.matches("aaabbb", rules)).doesNotContain(new Day19.Match(""));
-        assertThat(ruleZero.matches("aaaabbb", rules)).doesNotContain(new Day19.Match(""));
+        assertThat(ruleZero.matches("ababbb", rules)).containsExactly("");
+        assertThat(ruleZero.matches("abbbab", rules)).containsExactly("");
+        assertThat(ruleZero.matches("bababa", rules)).doesNotContain("");
+        assertThat(ruleZero.matches("aaabbb", rules)).doesNotContain("");
+        assertThat(ruleZero.matches("aaaabbb", rules)).doesNotContain("");
     }
 
     @Test
