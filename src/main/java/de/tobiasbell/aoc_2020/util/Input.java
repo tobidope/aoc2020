@@ -16,13 +16,18 @@ public final class Input {
     }
 
     public static String puzzleInput(final int day) {
-        try (InputStream stream = Input.class.getResourceAsStream("/day" + day + ".txt")) {
+        return readResource("day" + day + ".txt");
+    }
+
+    public static String readResource(final String name) {
+        try (InputStream stream = Input.class.getResourceAsStream("/" + name)) {
             final byte[] bytes = stream.readAllBytes();
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (IOException ioe) {
             throw new UncheckedIOException(ioe);
         }
     }
+
 
     public static Stream<String> lines(final String input) {
         return Arrays.stream(input.split("\\R"));
