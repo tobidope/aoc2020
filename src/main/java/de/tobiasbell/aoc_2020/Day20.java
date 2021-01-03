@@ -28,6 +28,31 @@ public class Day20 {
         return map;
     }
 
+    public static Map<Tile, Integer> matchingTiles(final List<Tile> tiles) {
+        Map<Tile, Integer> matching = new HashMap<>();
+        for (int i = 0; i < tiles.size() - 1; i++) {
+            final Tile tile = tiles.get(i);
+            for (Tile other : tiles.subList(i + 1, tiles.size())) {
+                if (tile.bordersMatch(other)) {
+                    matching.merge(tile, 1, Integer::sum);
+                    matching.merge(other, 1, Integer::sum);
+                }
+            }
+        }
+        return matching;
+    }
+
+    public static long solve1(final String puzzle) {
+        final List<Tile> tiles = readTiles(puzzle);
+        final Map<Tile, Integer> tilesWithNeighbors = matchingTiles(tiles);
+        return tilesWithNeighbors.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(2))
+                .map(Map.Entry::getKey)
+                .mapToLong(Tile::id)
+                .reduce(1, (left, right) -> left * right)
+                ;
+    }
+
     public record Tile(int id, String top, String bottom, String right, String left) {
 
         public static Tile parse(final String tile) {
@@ -46,6 +71,17 @@ public class Day20 {
 
         private static String reverse(final String side) {
             return new StringBuilder(side).reverse().toString();
+        }
+
+        public boolean bordersMatch(final Tile other) {
+            for (String a : borders()) {
+                for (String b : other.borders()) {
+                    if (a.equals(b) || a.equals(reverse(b))) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public Tile rotate() {
