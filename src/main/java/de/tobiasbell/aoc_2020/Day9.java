@@ -1,7 +1,6 @@
 package de.tobiasbell.aoc_2020;
 
 import de.tobiasbell.aoc_2020.util.Input;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -59,7 +58,6 @@ public class Day9 {
         throw new NoSuchElementException();
     }
 
-    @NotNull
     private static List<Long> parseNumbers(String input) {
         return Input.lines(input)
                 .map(Long::parseLong)

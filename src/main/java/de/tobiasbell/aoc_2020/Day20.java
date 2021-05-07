@@ -15,19 +15,6 @@ public class Day20 {
                 .collect(Collectors.toList());
     }
 
-    public static Map<String, Set<Tile>> matchingSides(final List<Tile> tiles) {
-        Map<String, Set<Tile>> map = new HashMap<>();
-        for (var tile : tiles) {
-            for (var orientation : tile.orientations()) {
-                for (var border : orientation.borders()) {
-                    map.putIfAbsent(border, new HashSet<>());
-                    map.get(border).add(tile);
-                }
-            }
-        }
-        return map;
-    }
-
     public static Map<Tile, Integer> matchingTiles(final List<Tile> tiles) {
         Map<Tile, Integer> matching = new HashMap<>();
         for (int i = 0; i < tiles.size() - 1; i++) {
@@ -49,11 +36,10 @@ public class Day20 {
                 .filter(entry -> entry.getValue().equals(2))
                 .map(Map.Entry::getKey)
                 .mapToLong(Tile::id)
-                .reduce(1, (left, right) -> left * right)
-                ;
+                .reduce(1, (left, right) -> left * right);
     }
 
-    public record Tile(int id, String top, String bottom, String right, String left) {
+    public record Tile(int id, String top, String bottom, String right, String left, List<String> interior) {
 
         public static Tile parse(final String tile) {
             final String[] split = tile.trim().split("\\R");
@@ -61,12 +47,18 @@ public class Day20 {
             final int id = Integer.parseInt(titleSplit[1].substring(0, titleSplit[1].length() - 1));
             StringBuilder right = new StringBuilder();
             StringBuilder left = new StringBuilder();
+            List<String> interior = new ArrayList<>();
             for (int i = 1; i < split.length; i++) {
                 var line = split[i];
                 right.append(line.substring(line.length() - 1));
                 left.append(line.charAt(0));
+                interior.add(line.substring(1, line.length() - 2));
             }
-            return new Tile(id, split[1], split[split.length - 1], right.toString(), left.toString());
+            return new Tile(id, split[1],
+                    split[split.length - 1],
+                    right.toString(),
+                    left.toString(),
+                    interior);
         }
 
         private static String reverse(final String side) {
@@ -90,7 +82,8 @@ public class Day20 {
                     reverse(left),
                     reverse(right),
                     top,
-                    bottom
+                    bottom,
+                    interior
             );
         }
 
@@ -100,7 +93,8 @@ public class Day20 {
                     reverse(top),
                     reverse(bottom),
                     left,
-                    right
+                    right,
+                    interior
             );
         }
 
@@ -110,8 +104,8 @@ public class Day20 {
                     bottom,
                     top,
                     reverse(right),
-                    reverse(left)
-
+                    reverse(left),
+                    interior
             );
         }
 

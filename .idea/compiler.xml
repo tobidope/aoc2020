@@ -17,7 +17,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="aoc2015" options="--enable-preview" />
-      <module name="aoc2020" options="--enable-preview" />
+      <module name="aoc2020" options="" />
     </option>
   </component>
 </project>

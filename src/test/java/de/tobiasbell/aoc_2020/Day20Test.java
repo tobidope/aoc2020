@@ -54,7 +54,8 @@ class Day20Test {
                 .hasFieldOrPropertyWithValue("top", "..##.#..#.")
                 .hasFieldOrPropertyWithValue("bottom", "..###..###")
                 .hasFieldOrPropertyWithValue("right", "...#.##..#")
-                .hasFieldOrPropertyWithValue("left", ".#####..#.");
+                .hasFieldOrPropertyWithValue("left", ".#####..#.")
+                .hasFieldOrProperty("interior");
 
     }
 
